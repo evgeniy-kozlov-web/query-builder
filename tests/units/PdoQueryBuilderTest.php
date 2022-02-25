@@ -18,8 +18,6 @@ class PdoQueryBuilderTest extends \PHPUnit\Framework\TestCase
 			'username' => 'root',
 			'password' => ''
 		]));
-
-		static::$id = static::$queryBuilder->table('foo')->create(['name' => 'test'])->lastInsertedId();
 	}
 
 	public function testItExtendsQueryBuilder()
@@ -29,6 +27,8 @@ class PdoQueryBuilderTest extends \PHPUnit\Framework\TestCase
 
 	public function testItCanCreate()
 	{
+		static::$id = static::$queryBuilder->table('foo')->create(['name' => 'test'])->lastInsertedId();
+
 		$this->assertEquals(
 			[
 				'id' => self::$id,
