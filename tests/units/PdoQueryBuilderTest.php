@@ -6,12 +6,11 @@ use app\database\{QueryBuilder, PDOQueryBuilder, PDOConnection};
 
 class PdoQueryBuilderTest extends \PHPUnit\Framework\TestCase
 {
-	private static PDOQueryBuilder $queryBuilder;
-	private static int $id;
+	private PDOQueryBuilder $queryBuilder;
 
-	public static function setUpBeforeClass(): void
+	public function setUp(): void
 	{
-		static::$queryBuilder = new PDOQueryBuilder(new PDOConnection([
+		$this->queryBuilder = new PDOQueryBuilder(new PDOConnection([
 			'driver' => 'mysql',
 			'db_name' => 'test',
 			'host' => 'localhost',
@@ -20,80 +19,107 @@ class PdoQueryBuilderTest extends \PHPUnit\Framework\TestCase
 		]));
 	}
 
+	public function tearDown(): void
+	{
+		$this->queryBuilder->table('foo')->delete()->do();
+	}
+
 	public function testItExtendsQueryBuilder()
 	{
-		$this->assertTrue(is_subclass_of(self::$queryBuilder, QueryBuilder::class));
+		$this->assertTrue(is_subclass_of($this->queryBuilder, QueryBuilder::class));
 	}
 
 	public function testItCanCreate()
 	{
-		static::$id = static::$queryBuilder->table('foo')->create(['name' => 'test'])->lastInsertedId();
+		$id = $this->queryBuilder->table('foo')->create(['name' => 'test'])->lastInsertedId();
 
 		$this->assertEquals(
 			[
-				'id' => self::$id,
+				'id' => $id,
 				'name' => 'test'
 			],
-			self::$queryBuilder->table('foo')->find(self::$id)->first()
+			$this->queryBuilder->table('foo')->find($id)->first()
 		);
 	}
 
 	public function testItCanRead()
 	{
-		$this->assertNotEmpty(self::$queryBuilder->table('foo')->read(['name'])->do()->get());
+		$this->assertEquals(
+			[
+				[
+					'name' => 'test'
+				]
+			],
+			$this->queryBuilder->table('foo')->create(['name' => 'test'])->read(['name'])->do()->get()
+		);
 	}
 
 	public function testItCanReadFirst()
 	{
+		$id = $this->queryBuilder->table('foo')->create(['name' => 'test'])->lastInsertedId();
+
 		$this->assertEquals(
 			[
-				'id' => self::$id,
+				'id' => $id,
 				'name' => 'test'
 			],
-			self::$queryBuilder->table('foo')->find(self::$id)->first()
+			$this->queryBuilder->table('foo')->read(['*'])->where('id', $id)->do()->first()
 		);
 	}
 
 	public function testItCanUpdate()
 	{
+		$id = $this->queryBuilder->table('foo')->create(['name' => 'test'])->lastInsertedId();
+
 		$this->assertEquals(
 			[
-				'id' => self::$id,
+				'id' => $id,
 				'name' => 'notest'
 			],
-			self::$queryBuilder->table('foo')->update(['name' => 'notest'])->where('id', self::$id)->do()->find(self::$id)->first()
+			$this->queryBuilder->update(['name' => 'notest'])->where('id', $id)->do()->read(['*'])->where('id', $id)->do()->first()
 		);
 	}
 
 	public function testItCanFind()
 	{
+		$id = $this->queryBuilder->table('foo')->create(['name' => 'test'])->lastInsertedId();
+
 		$this->assertEquals(
 			[
-				'id' => self::$id,
-				'name' => 'notest'
+				'id' => $id,
+				'name' => 'test'
 			],
-			self::$queryBuilder->table('foo')->find(self::$id)->first()
+			$this->queryBuilder->table('foo')->find($id)->first()
 		);
 	}
 
 	public function testItCanFindBy()
 	{
+		$id = $this->queryBuilder->table('foo')->create(['name' => 'testing'])->lastInsertedId();
+
 		$this->assertEquals(
 			[
-				'id' => self::$id,
-				'name' => 'notest'
+				'id' => $id,
+				'name' => 'testing'
 			],
-			self::$queryBuilder->findBy('name', 'notest')->first()
+			$this->queryBuilder->findBy('name', 'testing')->first()
 		);
 	}
 
 	public function testItCanSetWhere()
 	{
-		$this->assertEmpty(self::$queryBuilder->table('foo')->where('name', 'testing')->read(['*'])->do()->get());
+		$this->assertEmpty($this->queryBuilder->table('foo')->create(['name' => 'test'])->read(['*'])->where('name', 'nottest')->do()->get());
+	}
+
+	public function testItCanSetOperationsInWhere()
+	{
+		$this->assertNotEmpty($this->queryBuilder->table('foo')->create(['name' => 'test'])->read(['*'])->where('name', 'nottest', '<>')->do()->get());
 	}
 
 	public function testItCanDelete()
 	{
-		$this->assertEmpty(self::$queryBuilder->table('foo')->delete()->where('id', self::$id)->do()->find(self::$id)->first());
+		$id = $this->queryBuilder->table('foo')->create(['name' => 'testing'])->lastInsertedId();
+
+		$this->assertEmpty($this->queryBuilder->table('foo')->delete()->where('id', $id)->do()->find($id)->first());
 	}
 }
