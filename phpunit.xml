@@ -1,0 +1,11 @@
+<phpunit
+	colors="true"
+	testdox="true"
+	bootstrap="vendor/autoload.php"
+>
+<testsuites>
+  <testsuite name="Router tests">
+    <directory>tests/units/</directory>
+  </testsuite>
+</testsuites>
+</phpunit>

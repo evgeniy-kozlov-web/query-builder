@@ -1,0 +1,23 @@
+{
+	"name": "sezmar/query-builder",
+	"type": "project",
+	"authors": [
+		{
+			"name": "Eugen Kozlov",
+			"email": "evgeniykozlovyt@gmail.com"
+		}
+	],
+	"autoload": {
+		"psr-4": {
+			"app\\": "src/"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"test\\": "test/"
+		}
+	},
+	"require-dev": {
+		"phpunit/phpunit": "^9.5"
+	}
+}
