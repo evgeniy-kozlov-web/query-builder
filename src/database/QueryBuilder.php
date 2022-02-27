@@ -64,8 +64,6 @@ abstract class QueryBuilder
 
 	public function create(array $data): QueryBuilder
 	{
-		if (empty($this->table)) throw new \app\exceptions\TableIsEmptyException();
-
 		$this->fields = array_keys($data);
 		$this->bindings = array_values($data);
 		$this->type = self::DML_TYPE_CREATE;
@@ -77,8 +75,6 @@ abstract class QueryBuilder
 
 	public function read(array $fields): QueryBuilder
 	{
-		if (empty($this->table)) throw new \app\exceptions\TableIsEmptyException();
-
 		$this->fields = $fields;
 		$this->type = self::DML_TYPE_READ;
 
@@ -87,8 +83,6 @@ abstract class QueryBuilder
 
 	public function update(array $data): QueryBuilder
 	{
-		if (empty($this->table)) throw new \app\exceptions\TableIsEmptyException();
-
 		foreach ($data as $key => $value) {
 			$this->fields[] = $key . '=' . self::PLACEHOLDER;
 			$this->bindings[] = $value;
@@ -101,8 +95,6 @@ abstract class QueryBuilder
 
 	public function delete(): QueryBuilder
 	{
-		if (empty($this->table)) throw new \app\exceptions\TableIsEmptyException();
-
 		$this->type = self::DML_TYPE_DELETE;
 
 		return $this;
@@ -110,8 +102,6 @@ abstract class QueryBuilder
 
 	public function find(int $id): QueryBuilder
 	{
-		if (empty($this->table)) throw new \app\exceptions\TableIsEmptyException();
-
 		$this->read(['*'])->where('id', $id)->do();
 
 		return $this;
@@ -119,8 +109,6 @@ abstract class QueryBuilder
 
 	public function findBy(string $field, mixed $value): QueryBuilder
 	{
-		if (empty($this->table)) throw new \app\exceptions\TableIsEmptyException();
-
 		$this->read(['*'])->where($field, $value)->do();
 
 		return $this;
@@ -128,7 +116,7 @@ abstract class QueryBuilder
 
 	public function where(string $field, string $value, string $operator = self::DML_OPERATORS[0]): QueryBuilder
 	{
-		if (!in_array($operator, self::DML_OPERATORS)) throw new \app\exceptions\OperatorIsInvalidException();
+		if (!in_array($operator, self::DML_OPERATORS)) throw new \app\exceptions\InvalidOperatorException();
 
 		$this->placeholders[] = $field . $operator . self::PLACEHOLDER;
 		$this->bindings[] = $value;
