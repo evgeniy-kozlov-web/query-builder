@@ -4,6 +4,13 @@ namespace app\database;
 
 class PDOQueryBuilder extends QueryBuilder
 {
+	protected const FETCH_TYPE = \PDO::FETCH_ASSOC;
+
+	public function __construct(PDOConnection $connection)
+	{
+		parent::__construct($connection);
+	}
+
 	public function prepare(string $query): PDOQueryBuilder
 	{
 		$this->statement = $this->connection->prepare($query);
