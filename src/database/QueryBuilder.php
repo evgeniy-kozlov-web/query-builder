@@ -132,8 +132,8 @@ abstract class QueryBuilder
 		return $this;
 	}
 
-	abstract public function prepare(string $query): QueryBuilder;
-	abstract public function execute(): QueryBuilder;
+	abstract protected function prepare(string $query): QueryBuilder;
+	abstract protected function execute(): QueryBuilder;
 
 	abstract public function get(): array | bool;
 	abstract public function first(): array | bool;

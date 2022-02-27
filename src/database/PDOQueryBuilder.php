@@ -11,14 +11,14 @@ class PDOQueryBuilder extends QueryBuilder
 		parent::__construct($connection);
 	}
 
-	public function prepare(string $query): PDOQueryBuilder
+	protected function prepare(string $query): PDOQueryBuilder
 	{
 		$this->statement = $this->connection->prepare($query);
 
 		return $this;
 	}
 
-	public function execute(): PDOQueryBuilder
+	protected function execute(): PDOQueryBuilder
 	{
 		$this->statement->execute($this->bindings);
 
