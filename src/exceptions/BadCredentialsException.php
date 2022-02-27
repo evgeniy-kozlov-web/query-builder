@@ -4,6 +4,6 @@ namespace app\exceptions;
 
 class BadCredentialsException extends \Exception
 {
-	protected $code = 500;
+	protected $code = 422;
 	protected $message = 'Credentials is bad';
 }
