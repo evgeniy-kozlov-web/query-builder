@@ -6,24 +6,24 @@ use app\interfaces\IDatabaseConnection;
 
 abstract class QueryBuilder
 {
-	protected string $table;
+	private string $table;
 
-	protected array $bindings = [];
-	protected array $placeholders = [];
-	protected array $fields = [];
+	private array $bindings = [];
+	private array $placeholders = [];
+	private array $fields = [];
 
 	protected $statement;
 	protected $connection;
 
-	protected $type;
+	private $type;
 
-	protected const PLACEHOLDER = '?';
+	private const PLACEHOLDER = '?';
 
-	protected const DML_TYPE_CREATE = "INSERT";
-	protected const DML_TYPE_READ = "SELECT";
-	protected const DML_TYPE_UPDATE = "UPDATE";
-	protected const DML_TYPE_DELETE = "DELETE";
-	protected const DML_OPERATORS = [
+	private const DML_TYPE_CREATE = "INSERT";
+	private const DML_TYPE_READ = "SELECT";
+	private const DML_TYPE_UPDATE = "UPDATE";
+	private const DML_TYPE_DELETE = "DELETE";
+	private const DML_OPERATORS = [
 		'=',
 		'>',
 		'<',

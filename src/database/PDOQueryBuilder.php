@@ -4,7 +4,7 @@ namespace app\database;
 
 class PDOQueryBuilder extends QueryBuilder
 {
-	protected const FETCH_TYPE = \PDO::FETCH_ASSOC;
+	private const FETCH_TYPE = \PDO::FETCH_ASSOC;
 
 	public function __construct(PDOConnection $connection)
 	{
