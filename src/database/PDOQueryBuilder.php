@@ -22,10 +22,6 @@ class PDOQueryBuilder extends QueryBuilder
 	{
 		$this->statement->execute($this->bindings);
 
-		$this->placeholders = [];
-		$this->bindings = [];
-		$this->fields = [];
-
 		return $this;
 	}
 

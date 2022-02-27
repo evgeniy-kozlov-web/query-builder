@@ -46,6 +46,10 @@ abstract class QueryBuilder
 		$this->prepare($query);
 		$this->execute();
 
+		$this->placeholders = [];
+		$this->bindings = [];
+		$this->fields = [];
+
 		return $this;
 	}
 
