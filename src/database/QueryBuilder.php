@@ -32,8 +32,6 @@ abstract class QueryBuilder
 		'<>'
 	];
 
-	protected const FETCH_TYPE = \PDO::FETCH_ASSOC;
-
 	public function __construct(IDatabaseConnection $connection)
 	{
 		$this->connection = $connection->connect()->getConnection();
